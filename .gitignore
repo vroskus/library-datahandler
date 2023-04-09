@@ -1,0 +1,11 @@
+**/dist
+**/node_modules
+**/coverage
+
+.eslintcache
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.idea
+*.iml
+*.env

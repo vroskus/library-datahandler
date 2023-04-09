@@ -1,0 +1,76 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "project": ["tsconfig.json"]
+  },
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript",
+    "plugin:import/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:sort/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "import-newlines",
+    "react",
+    "sort"
+  ],
+  "rules": {
+    "complexity": ["error", 5],
+    "@typescript-eslint/ban-ts-comment": [1],
+    "@typescript-eslint/no-unused-vars": [2],
+    "curly": ["error", "all"],
+    "import/no-cycle": [0],
+    "no-await-in-loop": 0,
+    "no-console": "error",
+    "no-duplicate-imports": [0],
+    "no-loss-of-precision": [0],
+    "no-restricted-syntax": 0,
+    "no-unreachable-loop": [0],
+    "no-useless-backreference": [0],
+    "no-unused-private-class-members": [2],
+    "padding-line-between-statements": ["error", {
+      "blankLine": "always",
+      "prev": ["const", "let"],
+      "next": "*"
+    }, {
+      "blankLine": "any",
+      "prev": ["const", "let"],
+      "next": ["const", "let"]
+    }, {
+      "blankLine": "always",
+      "prev": ["if", "function", "for"],
+      "next": "*"
+    }, {
+      "blankLine": "always",
+      "prev": "*",
+      "next": "return"
+    }],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": "always",
+      "ObjectPattern": "always",
+      "ImportDeclaration": "always",
+      "ExportDeclaration": "always"
+    }],
+    "function-call-argument-newline": ["error", "always"],
+    "object-property-newline": ["error", {
+      "allowMultiplePropertiesPerLine": false
+    }],
+    "import-newlines/enforce": ["error", {
+      "items": 1,
+      "forceSingleLine": false
+    }],
+    "sort/imports": [0],
+    "sort/exports": [0]
+  },
+  "env": {
+    "node": true,
+    "jest": true,
+    "es6": true
+  }
+}
