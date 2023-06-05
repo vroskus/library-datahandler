@@ -16,12 +16,17 @@ import type {
   $Config,
   $Include,
   $QueryParams,
+  $RequestContext,
   $Where,
 } from './types';
 
 import type {
   $Helpers,
 } from './helpers';
+
+type $RequestContextListener = (arg0: $RequestContext) => unknown;
+type $SetRequestContextListenerParams = { listener: $RequestContextListener };
+type $SetRequestContextListenerResponse = void;
 
 export * from './types';
 
@@ -38,6 +43,8 @@ class DatabaseService<C extends $Config, MC extends {
   stack: Sequelize;
 
   Op: object;
+
+  requestContextListener: $RequestContextListener;
 
   constructor({
     database,
@@ -104,12 +111,20 @@ class DatabaseService<C extends $Config, MC extends {
     this.stack = stack;
 
     this.Op = Op;
+
+    this.requestContextListener = () => {};
   }
 
   async setupTestEnvironment(): Promise<void> {
     await this.stack.sync({
       force: true,
     });
+  }
+
+  setRequestContextListener({
+    listener,
+  }: $SetRequestContextListenerParams): $SetRequestContextListenerResponse {
+    this.requestContextListener = listener;
   }
 
   // getModel private method
@@ -315,20 +330,26 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // getOne method
-  async getOne<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async getOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN] | null> {
+    this.requestContextListener({
+      method: 'getOne',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     // If more then one record found
     if (modelInstances.length > 1) {
@@ -349,70 +370,94 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // getFirst method
-  async getFirst<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async getFirst<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN] | null> {
+    this.requestContextListener({
+      method: 'getFirst',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     return _.first(modelInstances) || null;
   }
 
   // getLast method
-  async getLast<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async getLast<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN] | null> {
+    this.requestContextListener({
+      method: 'getLast',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     return _.last(modelInstances) || null;
   }
 
   // getMany method
-  async getMany<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async getMany<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<Array<MC['Models'][MN]>> {
+    this.requestContextListener({
+      method: 'getMany',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
 
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
 
-    return model.findAll(request);
+    return model.findAll(queryParams);
   }
 
   // createOne method
-  async createOne<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async createOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: MC['Config'][MN]['ModelCreateParams'];
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'createOne',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
@@ -423,15 +468,21 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // createBundle method
-  async createBundle<MN extends keyof MC['Config']>({
-    include,
-    modelName,
-    params,
-  }: {
+  async createBundle<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: MC['Config'][MN]['ModelCreateParams'];
     include: $Include<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'createBundle',
+      request,
+    });
+
+    const {
+      include,
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
@@ -447,13 +498,19 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // createMany method
-  async createMany<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async createMany<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: Array<MC['Config'][MN]['ModelCreateParams']>;
   }): Promise<Array<MC['Models'][MN]>> {
+    this.requestContextListener({
+      method: 'createMany',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
@@ -464,15 +521,21 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // upsertOne method
-  async upsertOne<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-    where,
-  }: {
+  async upsertOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: MC['Config'][MN]['ModelUpsertParams'] | MC['Models'][MN];
     where: $Where<MC['Config'], MN>;
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'upsertOne',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+      where,
+    } = request;
     const attributes = _.omit(
       params,
       ['id', 'createdAt', 'updatedAt'],
@@ -482,12 +545,12 @@ class DatabaseService<C extends $Config, MC extends {
       modelName,
     });
 
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params: {
         where,
       },
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     if (modelInstances.length > 1) {
       throw new CustomError(
@@ -515,13 +578,19 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // updateOne method
-  async updateOne<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async updateOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: MC['Config'][MN]['ModelUpdateParams'] | MC['Models'][MN];
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'updateOne',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const {
       // @ts-ignore
       id,
@@ -545,13 +614,19 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // toggleOne method
-  async toggleOne<MN extends keyof MC['Config']>({
-    modelName,
-    where,
-  }: {
+  async toggleOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     where: $Where<MC['Config'], MN>;
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'toggleOne',
+      request,
+    });
+
+    const {
+      modelName,
+      where,
+    } = request;
     const attributes = _.omit(
       where,
       ['id', 'createdAt', 'updatedAt'],
@@ -561,12 +636,12 @@ class DatabaseService<C extends $Config, MC extends {
       modelName,
     });
 
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params: {
         where,
       },
     });
-    let modelInstance = await model.findOne(request);
+    let modelInstance = await model.findOne(queryParams);
 
     if (modelInstance !== null) {
       await modelInstance.destroy();
@@ -578,20 +653,26 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // deleteOne method
-  async deleteOne<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async deleteOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'deleteOne',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     // If more then one record found
     if (modelInstances.length > 1) {
@@ -627,20 +708,26 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // deleteMany method
-  async deleteMany<MN extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async deleteMany<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<Array<MC['Models'][MN]>> {
+    this.requestContextListener({
+      method: 'deleteMany',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
     const model = this.#getModel({
       modelName,
     });
-    const request = this.#prepareQueryParams({
+    const queryParams = this.#prepareQueryParams({
       params,
     });
-    const modelInstances = await model.findAll(request);
+    const modelInstances = await model.findAll(queryParams);
 
     for (let index = 0; index < modelInstances.length; index += 1) {
       if (modelInstances[index].destroy) {
@@ -652,14 +739,7 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // sync method
-  async sync<MN extends keyof MC['Config'], AM extends keyof MC['Config']>({
-    modelName,
-    params: {
-      associationModelId,
-      associationModelName,
-      items,
-    },
-  }: {
+  async sync<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
       items: Array<MC['Config'][MN]['ModelUpsertParams']>;
@@ -672,6 +752,19 @@ class DatabaseService<C extends $Config, MC extends {
       syncedItems: Array<MC['Models'][MN]>;
       updatedItemIds: Array<string>;
     }> {
+    this.requestContextListener({
+      method: 'sync',
+      request,
+    });
+
+    const {
+      modelName,
+      params: {
+        associationModelId,
+        associationModelName,
+        items,
+      },
+    } = request;
     const actions: Array<Promise<MC['Models'][MN]>> = [];
     const where = {
       [`${String(associationModelName)}Id`]: associationModelId,
@@ -711,7 +804,7 @@ class DatabaseService<C extends $Config, MC extends {
     const syncedItems: Array<MC['Models'][MN]> = [];
 
     items.forEach((item) => {
-      const request = {
+      const updateRequest = {
         modelName,
         params: {
           ...item,
@@ -723,7 +816,7 @@ class DatabaseService<C extends $Config, MC extends {
       };
 
       const action = (async () => {
-        const upsertedItem = await this.upsertOne(request);
+        const upsertedItem = await this.upsertOne(updateRequest);
 
         if (!item.id) {
           createdItemIds.push(upsertedItem.id);
@@ -736,7 +829,7 @@ class DatabaseService<C extends $Config, MC extends {
     });
 
     deletedItemIds.forEach((id: string) => {
-      const request = {
+      const deleteRequest = {
         modelName,
         params: {
           where: {
@@ -746,7 +839,7 @@ class DatabaseService<C extends $Config, MC extends {
         },
       };
 
-      const action = this.deleteOne(request);
+      const action = this.deleteOne(deleteRequest);
 
       actions.push(action);
     });
@@ -762,10 +855,7 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // addAssociation method
-  async addAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async addAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
       id: string;
@@ -774,12 +864,20 @@ class DatabaseService<C extends $Config, MC extends {
       pivot?: object;
     };
   }): Promise<MC['Models'][MN]> {
+    this.requestContextListener({
+      method: 'addAssociation',
+      request,
+    });
+
     const {
-      associationModelId,
-      associationModelName,
-      id,
-      pivot,
-    } = params;
+      modelName,
+      params: {
+        associationModelId,
+        associationModelName,
+        id,
+        pivot,
+      },
+    } = request;
 
     const result = await this.#associate({
       action: 'add',
@@ -809,10 +907,7 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // removeAssociation method
-  async removeAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>({
-    modelName,
-    params,
-  }: {
+  async removeAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
       id: string;
@@ -821,11 +916,19 @@ class DatabaseService<C extends $Config, MC extends {
       pivot?: object;
     };
   }): Promise<boolean> {
+    this.requestContextListener({
+      method: 'removeAssociation',
+      request,
+    });
+
     const {
-      associationModelId,
-      associationModelName,
-      id,
-    } = params;
+      modelName,
+      params: {
+        associationModelId,
+        associationModelName,
+        id,
+      },
+    } = request;
 
     const result = await this.#associate({
       action: 'remove',
@@ -854,14 +957,7 @@ class DatabaseService<C extends $Config, MC extends {
   }
 
   // syncAssociations method
-  async syncAssociations<MN extends keyof MC['Config'], AM extends keyof MC['Config']>({
-    modelName,
-    params: {
-      associationModelIds,
-      associationModelName,
-      id,
-    },
-  }: {
+  async syncAssociations<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
       id: string;
@@ -872,6 +968,19 @@ class DatabaseService<C extends $Config, MC extends {
       addedAssociationModelIds: Array<string>;
       removedAssociationModelIds: Array<string>;
     }> {
+    this.requestContextListener({
+      method: 'syncAssociations',
+      request,
+    });
+
+    const {
+      modelName,
+      params: {
+        associationModelIds,
+        associationModelName,
+        id,
+      },
+    } = request;
     const actions: Array<Promise<MC['Models'][MN]>> = [];
     const pluralAssociationModelName = pluralize.plural(associationModelName);
 

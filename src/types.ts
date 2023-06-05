@@ -44,3 +44,8 @@ MN extends keyof MCC,
   // include?: $Include<$Keys<$ModelAssociations<M>>>,
   include?: $Include<MCC, MCS, any>;
 };
+
+export type $RequestContext = {
+  method: string,
+  request: Record<string, any>,
+};
