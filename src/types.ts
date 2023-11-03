@@ -13,7 +13,7 @@ export type $Where<
 MCC extends Record<MN, any>,
 MN extends keyof MCC,
 > = MCC[MN]['ModelQueryParams'] & {
-  [key: string]: string | Record<string, any> | void;
+  [key: string]: string | number | boolean | Record<string, any> | void;
 };
 
 type $IncludeInside<
