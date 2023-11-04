@@ -42,7 +42,7 @@ class DatabaseService<C extends $Config, MC extends {
 
   stack: Sequelize;
 
-  Op: object;
+  Op: typeof Op;
 
   requestContextListener: $RequestContextListener;
 
@@ -287,7 +287,7 @@ class DatabaseService<C extends $Config, MC extends {
     id: string;
     associationModelName: keyof MC['Config'];
     associationModelId: string;
-    pivot?: object;
+    pivot?: Record<string, unknown>;
   }) {
     const actionMethod = `${action}${String(associationModelName)}`;
 
@@ -861,7 +861,7 @@ class DatabaseService<C extends $Config, MC extends {
       id: string;
       associationModelName: AM;
       associationModelId: string;
-      pivot?: object;
+      pivot?: Record<string, unknown>;
     };
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
@@ -913,7 +913,7 @@ class DatabaseService<C extends $Config, MC extends {
       id: string;
       associationModelName: AM;
       associationModelId: string;
-      pivot?: object;
+      pivot?: Record<string, unknown>;
     };
   }): Promise<boolean> {
     this.requestContextListener({
