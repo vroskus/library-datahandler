@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // Helpers
 import {
   Op,
@@ -6,8 +8,8 @@ import {
 import _ from 'lodash';
 import pluralize from 'pluralize';
 import {
-  baseErrorKey,
   CustomError,
+  baseErrorKey,
 } from '@vroskus/library-error';
 import helpers from './helpers';
 
@@ -31,9 +33,9 @@ type $SetRequestContextListenerResponse = void;
 export * from './types';
 
 class DatabaseService<C extends $Config, MC extends {
+  Classes: any;
   Config: any;
   Models: any;
-  Classes: any;
   Shapes: any;
 }> {
   models: MC['Classes'];
@@ -159,8 +161,8 @@ class DatabaseService<C extends $Config, MC extends {
     id,
     modelName,
   }: {
-    modelName: MN;
     id: string;
+    modelName: MN;
   }): Promise<MC['Models'][MN]> {
     const model = this.#getModel({
       modelName,
@@ -189,12 +191,12 @@ class DatabaseService<C extends $Config, MC extends {
     include: includeInput,
     where: whereInput,
   }: {
-    where: $Where<MC['Config'], MN>;
     include: $Include<MC['Config'], MC['Classes'], MN>;
+    where: $Where<MC['Config'], MN>;
   }): {
-      where: $Where<MC['Config'], MN>;
       as?: string;
       include: $Include<MC['Config'], MC['Classes'], MN>;
+      where: $Where<MC['Config'], MN>;
     } {
     let where = _.clone(whereInput);
 
@@ -283,10 +285,10 @@ class DatabaseService<C extends $Config, MC extends {
     pivot,
   }: {
     action: 'add' | 'remove';
-    modelName: keyof MC['Config'];
-    id: string;
-    associationModelName: keyof MC['Config'];
     associationModelId: string;
+    associationModelName: keyof MC['Config'];
+    id: string;
+    modelName: keyof MC['Config'];
     pivot?: Record<string, unknown>;
   }) {
     const actionMethod = `${action}${String(associationModelName)}`;
@@ -469,9 +471,9 @@ class DatabaseService<C extends $Config, MC extends {
 
   // createBundle method
   async createBundle<MN extends keyof MC['Config']>(request: {
+    include: $Include<MC['Config'], MC['Classes'], MN>;
     modelName: MN;
     params: MC['Config'][MN]['ModelCreateParams'];
-    include: $Include<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
       method: 'createBundle',
@@ -742,9 +744,9 @@ class DatabaseService<C extends $Config, MC extends {
   async sync<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
-      items: Array<MC['Config'][MN]['ModelUpsertParams']>;
-      associationModelName: AM;
       associationModelId: string;
+      associationModelName: AM;
+      items: Array<MC['Config'][MN]['ModelUpsertParams']>;
     };
   }): Promise<{
       createdItemIds: Array<string>;
@@ -858,9 +860,9 @@ class DatabaseService<C extends $Config, MC extends {
   async addAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
-      id: string;
-      associationModelName: AM;
       associationModelId: string;
+      associationModelName: AM;
+      id: string;
       pivot?: Record<string, unknown>;
     };
   }): Promise<MC['Models'][MN]> {
@@ -910,9 +912,9 @@ class DatabaseService<C extends $Config, MC extends {
   async removeAssociation<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
-      id: string;
-      associationModelName: AM;
       associationModelId: string;
+      associationModelName: AM;
+      id: string;
       pivot?: Record<string, unknown>;
     };
   }): Promise<boolean> {
@@ -960,9 +962,9 @@ class DatabaseService<C extends $Config, MC extends {
   async syncAssociations<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
     params: {
-      id: string;
-      associationModelName: AM;
       associationModelIds: Array<string>;
+      associationModelName: AM;
+      id: string;
     };
   }): Promise<{
       addedAssociationModelIds: Array<string>;

@@ -3,22 +3,24 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "requireConfigFile": false,
+    "ecmaVersion": "latest",
     "project": ["**/tsconfig.eslint.json"]
   },
   "extends": [
     "airbnb-base",
     "airbnb-typescript",
+    "problems",
     "plugin:import/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:sort/recommended"
+    "plugin:perfectionist/recommended-natural"
   ],
   "plugins": [
     "@typescript-eslint",
     "import",
     "import-newlines",
     "react",
-    "sort"
+    "perfectionist"
   ],
   "rules": {
     "complexity": ["error", 5],
@@ -65,9 +67,9 @@
       "items": 1,
       "forceSingleLine": false
     }],
-    "sort/imports": [0],
-    "sort/exports": [0],
-    "@typescript-eslint/no-explicit-any": [1]
+    "perfectionist/sort-imports": [0],
+    "perfectionist/sort-exports": [0],
+    "perfectionist/sort-classes": [0]
   },
   "env": {
     "node": true,
