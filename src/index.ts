@@ -368,7 +368,11 @@ class DatabaseService<C extends $Config, MC extends {
       );
     }
 
-    return _.head(modelInstances) || null;
+    if (modelInstances.length === 1) {
+      return modelInstances[0];
+    }
+
+    return null;
   }
 
   // getFirst method
@@ -393,7 +397,11 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    return _.first(modelInstances) || null;
+    if (modelInstances.length > 0) {
+      return modelInstances[0];
+    }
+
+    return null;
   }
 
   // getLast method
@@ -418,7 +426,11 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    return _.last(modelInstances) || null;
+    if (modelInstances.length > 0) {
+      return modelInstances[modelInstances.length - 1];
+    }
+
+    return null;
   }
 
   // getMany method
