@@ -335,7 +335,7 @@ class DatabaseService<C extends $Config, MC extends {
   async getOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
-  }): Promise<MC['Models'][MN] | null> {
+  }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
       method: 'getOne',
       request,
@@ -379,7 +379,7 @@ class DatabaseService<C extends $Config, MC extends {
   async getFirst<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
-  }): Promise<MC['Models'][MN] | null> {
+  }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
       method: 'getFirst',
       request,
@@ -408,7 +408,7 @@ class DatabaseService<C extends $Config, MC extends {
   async getLast<MN extends keyof MC['Config']>(request: {
     modelName: MN;
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
-  }): Promise<MC['Models'][MN] | null> {
+  }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
       method: 'getLast',
       request,
