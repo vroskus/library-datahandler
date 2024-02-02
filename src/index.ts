@@ -252,6 +252,8 @@ class DatabaseService<C extends $Config, MC extends {
     const preparedParams = {
       attributes: params.attributes,
       include: params.include,
+      limit: params.limit,
+      offset: params.offset,
       where: undefined,
     };
 
