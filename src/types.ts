@@ -44,6 +44,8 @@ MN extends keyof MCC,
   attributes?: Array<string>;
   // include?: $Include<$Keys<$ModelAssociations<M>>>,
   include?: $Include<MCC, MCS, any>;
+  limit?: number,
+  offset?: number,
   where?: $Where<MCC, MN>;
 };
 
