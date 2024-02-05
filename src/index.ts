@@ -754,6 +754,31 @@ class DatabaseService<C extends $Config, MC extends {
     return modelInstances;
   }
 
+  // count method
+  async count<MN extends keyof MC['Config']>(request: {
+    modelName: MN;
+    params: $QueryParams<MC['Config'], MC['Classes'], MN>;
+  }): Promise<number> {
+    this.requestContextListener({
+      method: 'count',
+      request,
+    });
+
+    const {
+      modelName,
+      params,
+    } = request;
+    const model = this.#getModel({
+      modelName,
+    });
+
+    const queryParams = this.#prepareQueryParams({
+      params,
+    });
+
+    return model.count(queryParams);
+  }
+
   // sync method
   async sync<MN extends keyof MC['Config'], AM extends keyof MC['Config']>(request: {
     modelName: MN;
