@@ -2,7 +2,9 @@
 
 // Helpers
 import {
+  Dialect,
   Op,
+  Options,
   Sequelize,
 } from 'sequelize';
 import _ from 'lodash';
@@ -58,17 +60,15 @@ class DatabaseService<C extends $Config, MC extends {
     storage,
     username,
   }: C, modelShapes: MC['Shapes']) {
-    const dbConfig = {
+    const dbConfig: Options = {
       database,
       define: {
         charset: 'utf8',
-        dialectOptions: {
-          collate: 'utf8_general_ci',
-        },
         timestamps: true,
       },
-      dialect: dialect || 'mysql',
+      dialect: dialect || 'mysql' as Dialect,
       dialectOptions: {
+        collate: 'utf8_general_ci',
       },
       host,
       logging,
@@ -78,12 +78,7 @@ class DatabaseService<C extends $Config, MC extends {
       username,
     };
 
-    const stack = new Sequelize(
-      dbConfig.database,
-      dbConfig.username,
-      dbConfig.password,
-      dbConfig,
-    );
+    const stack = new Sequelize(dbConfig);
 
     // Init models
     const models: MC['Classes'] = _.mapValues(
@@ -117,7 +112,7 @@ class DatabaseService<C extends $Config, MC extends {
     this.requestContextListener = () => {};
   }
 
-  async setupTestEnvironment(): Promise<void> {
+  async initDatabase(): Promise<void> {
     await this.stack.sync({
       force: true,
     });
