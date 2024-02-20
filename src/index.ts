@@ -2,7 +2,6 @@
 
 // Helpers
 import {
-  Dialect,
   Op,
   Options,
   Sequelize,
@@ -13,7 +12,6 @@ import {
   CustomError,
   baseErrorKey,
 } from '@vroskus/library-error';
-import helpers from './helpers';
 
 // Types
 import type {
@@ -23,10 +21,6 @@ import type {
   $RequestContext,
   $Where,
 } from './types';
-
-import type {
-  $Helpers,
-} from './helpers';
 
 type $RequestContextListener = (arg0: $RequestContext) => unknown;
 type $SetRequestContextListenerParams = { listener: $RequestContextListener };
@@ -42,51 +36,31 @@ class DatabaseService<C extends $Config, MC extends {
 }> {
   models: MC['Classes'];
 
-  helpers: $Helpers;
-
-  stack: Sequelize;
+  sequelize: Sequelize;
 
   Op: typeof Op;
 
   requestContextListener: $RequestContextListener;
 
-  constructor({
-    database,
-    dialect,
-    host,
-    logging,
-    password,
-    port,
-    storage,
-    username,
-  }: C, modelShapes: MC['Shapes']) {
-    const dbConfig: Options = {
-      database,
-      define: {
-        charset: 'utf8',
-        timestamps: true,
-      },
-      dialect: dialect || 'mysql' as Dialect,
-      dialectOptions: {
-        collate: 'utf8_general_ci',
-      },
-      host,
-      logging,
-      password,
-      port: Number(port),
-      storage,
-      username,
-    };
+  constructor(config: C, modelShapes: MC['Shapes']) {
+    const dbConfig = this.getDbConfig(config);
 
-    const stack = new Sequelize(dbConfig);
+    this.sequelize = new Sequelize(dbConfig);
 
+    this.models = this.#init(modelShapes);
+
+    this.Op = Op;
+
+    this.requestContextListener = () => {};
+  }
+
+  #init(modelShapes: MC['Shapes']): void {
     // Init models
     const models: MC['Classes'] = _.mapValues(
       modelShapes,
       (f) => f(
         Sequelize,
-        stack,
-        helpers,
+        this.sequelize,
       ),
     );
 
@@ -101,21 +75,70 @@ class DatabaseService<C extends $Config, MC extends {
       }
     });
 
-    this.models = models;
-
-    this.helpers = helpers;
-
-    this.stack = stack;
-
-    this.Op = Op;
-
-    this.requestContextListener = () => {};
+    return models;
   }
 
   async initDatabase(): Promise<void> {
-    await this.stack.sync({
+    await this.sequelize.sync({
       force: true,
     });
+  }
+
+  /* eslint-disable-next-line class-methods-use-this */
+  getDbConfig(config: $Config): Options {
+    if (config.dialect === 'mysql') {
+      const {
+        database,
+        dialect,
+        host,
+        logging,
+        password,
+        port,
+        timestamps,
+        username,
+      } = config;
+
+      return {
+        database,
+        define: {
+          charset: 'utf8',
+          timestamps,
+        },
+        dialect,
+        dialectOptions: {
+          collate: 'utf8_general_ci',
+        },
+        host,
+        logging,
+        password,
+        port: Number(port),
+        username,
+      };
+    }
+
+    if (config.dialect === 'sqlite') {
+      const {
+        dialect,
+        logging,
+        storage,
+        timestamps,
+      } = config;
+
+      return {
+        define: {
+          charset: 'utf8',
+          timestamps,
+        },
+        dialect,
+        dialectOptions: {
+          collate: 'utf8_general_ci',
+        },
+        logging,
+        storage,
+      };
+    }
+
+    throw new Error('Invalid default config');
   }
 
   setRequestContextListener({

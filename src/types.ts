@@ -1,15 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,no-use-before-define */
 
-export type $Config = {
-  database: string;
-  dialect?: 'mysql' | 'sqlite';
-  host: string;
+interface $BaseConfig {
   logging?: boolean;
+  timestamps?: boolean;
+}
+
+interface $MysqlConfig extends $BaseConfig {
+  database: string;
+  dialect: 'mysql';
+  host: string;
   password: string;
   port: string;
-  storage?: string;
   username: string;
-};
+}
+
+interface $SqliteConfig extends $BaseConfig {
+  dialect: 'sqlite';
+  storage: string;
+}
+
+export type $Config = $MysqlConfig | $SqliteConfig;
 
 export type $Where<
 MCC extends Record<MN, any>,
