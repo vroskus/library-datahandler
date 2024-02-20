@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint @typescript-eslint/no-explicit-any:1 */
 
 // Helpers
 import {
