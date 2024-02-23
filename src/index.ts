@@ -9,8 +9,8 @@ import {
 import _ from 'lodash';
 import pluralize from 'pluralize';
 import {
+  BaseErrorKey,
   CustomError,
-  baseErrorKey,
 } from '@vroskus/library-error';
 
 // Types
@@ -159,7 +159,7 @@ class DatabaseService<C extends $Config, MC extends {
     )) {
       throw new CustomError(
         'Invalid model name',
-        baseErrorKey.invalidModelNameError,
+        BaseErrorKey.invalidModelNameError,
         {
           data: {
             modelName,
@@ -191,7 +191,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstance === null) {
       throw new CustomError(
         'Record was not found',
-        baseErrorKey.entityNotFoundError,
+        BaseErrorKey.entityNotFoundError,
         {
           data: {
             id,
@@ -331,7 +331,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (typeof modelInstance[actionMethod] !== 'function') {
       throw new CustomError(
         'Association action method not found',
-        baseErrorKey.associationActionMethodNotFoundError,
+        BaseErrorKey.associationActionMethodNotFoundError,
         {
           data: {
             action,
@@ -377,7 +377,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstances.length > 1) {
       throw new CustomError(
         'Multiple records found',
-        baseErrorKey.multipleRecordsFoundError,
+        BaseErrorKey.multipleRecordsFoundError,
         {
           data: {
             amount: modelInstances.length,
@@ -589,7 +589,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstances.length > 1) {
       throw new CustomError(
         'Multiple records found',
-        baseErrorKey.multipleRecordsFoundError,
+        BaseErrorKey.multipleRecordsFoundError,
         {
           data: {
             amount: modelInstances.length,
@@ -712,7 +712,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstances.length > 1) {
       throw new CustomError(
         'Multiple records found',
-        baseErrorKey.multipleRecordsFoundError,
+        BaseErrorKey.multipleRecordsFoundError,
         {
           data: {
             amount: modelInstances.length,
@@ -726,7 +726,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstances.length === 0) {
       throw new CustomError(
         'Record was not found',
-        baseErrorKey.entityNotFoundError,
+        BaseErrorKey.entityNotFoundError,
         {
           data: {
             modelName,
@@ -950,7 +950,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (!result || (result && result.length !== 1)) {
       throw new CustomError(
         'Already associatied records',
-        baseErrorKey.alreadyAssociatedRecordsError,
+        BaseErrorKey.alreadyAssociatedRecordsError,
         {
           data: {
             model1: modelName,
@@ -1000,7 +1000,7 @@ class DatabaseService<C extends $Config, MC extends {
     if (!result || (result && result !== 1)) {
       throw new CustomError(
         'Not associatied records',
-        baseErrorKey.notAssociatedRecordsError,
+        BaseErrorKey.notAssociatedRecordsError,
         {
           data: {
             model1: modelName,
