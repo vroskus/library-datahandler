@@ -20,7 +20,7 @@
     "test:e2e": "echo 'No tests'"
   },
   "dependencies": {
-    "@vroskus/library-error": "^1.0.21",
+    "@vroskus/library-error": "^1.0.22",
     "lodash": "^4.17.21",
     "mysql2": "^3.9.2",
     "pg-hstore": "^2.3.4",
