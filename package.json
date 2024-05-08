@@ -20,30 +20,30 @@
     "test:e2e": "echo 'No tests'"
   },
   "dependencies": {
-    "@vroskus/library-error": "^1.0.22",
+    "@vroskus/library-error": "^1.0.23",
     "lodash": "^4.17.21",
-    "mysql2": "^3.9.2",
+    "mysql2": "^3.9.7",
     "pg-hstore": "^2.3.4",
     "pluralize": "^8.0.0",
-    "sequelize": "^6.37.1",
+    "sequelize": "^6.37.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.0",
-    "@types/node": "^20.11.30",
+    "@types/lodash": "^4.17.1",
+    "@types/node": "^20.12.10",
     "@types/sequelize": "^4.28.20",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "@typescript-eslint/parser": "^7.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-problems": "^8.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-import-newlines": "^1.4.0",
-    "eslint-plugin-perfectionist": "^2.7.0",
+    "eslint-plugin-perfectionist": "^2.10.0",
     "eslint-plugin-react": "^7.34.1",
     "sqlite3": "5.1.6",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   }
 }

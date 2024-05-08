@@ -24,9 +24,9 @@ export type $Config = $MysqlConfig | $SqliteConfig;
 export type $Where<
 MCC extends Record<MN, any>,
 MN extends keyof MCC,
-> = MCC[MN]['ModelQueryParams'] & {
+> = {
   [key: string]: Record<string, unknown> | boolean | number | string | void;
-};
+} & MCC[MN]['ModelQueryParams'];
 
 type $IncludeInside<
 MCC extends Record<MN, any>,
