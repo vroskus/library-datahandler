@@ -33,16 +33,7 @@
     "@types/lodash": "^4.17.1",
     "@types/node": "^20.12.10",
     "@types/sequelize": "^4.28.20",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^18.0.0",
-    "eslint-config-problems": "^8.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-import-newlines": "^1.4.0",
-    "eslint-plugin-perfectionist": "^2.10.0",
-    "eslint-plugin-react": "^7.34.1",
+    "@vroskus/eslint-config": "^1.0.11",
     "sqlite3": "5.1.6",
     "typescript": "^5.4.5"
   }
