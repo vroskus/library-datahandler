@@ -20,18 +20,18 @@
     "test:e2e": "echo 'No tests'"
   },
   "dependencies": {
-    "@vroskus/library-error": "^1.0.23",
+    "@vroskus/library-error": "^1.0.28",
     "lodash": "^4.17.21",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.11.0",
     "pg-hstore": "^2.3.4",
     "pluralize": "^8.0.0",
     "sequelize": "^6.37.3",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.1",
-    "@types/node": "^20.12.10",
+    "@types/lodash": "^4.17.7",
+    "@types/node": "^22.4.1",
     "@types/sequelize": "^4.28.20",
     "@vroskus/eslint-config": "^1.0.11",
     "sqlite3": "5.1.6",
