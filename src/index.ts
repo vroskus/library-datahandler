@@ -210,8 +210,8 @@ class DatabaseService<C extends $Config, MC extends {
     return modelInstance;
   }
 
-  // mapQueryAssociations private method
-  #mapQueryAssociations<MN extends keyof MC['Config']>({
+  // mapQueryAssociations method
+  mapQueryAssociations<MN extends keyof MC['Config']>({
     include: includeInput,
     where: whereInput,
   }: {
@@ -242,7 +242,7 @@ class DatabaseService<C extends $Config, MC extends {
             include.push({
               as: associationName,
               model,
-              ...this.#mapQueryAssociations({
+              ...this.mapQueryAssociations({
                 include: [],
                 where: {
                   [param]: value,
@@ -285,7 +285,7 @@ class DatabaseService<C extends $Config, MC extends {
       const {
         include,
         where,
-      } = this.#mapQueryAssociations({
+      } = this.mapQueryAssociations({
         include: _.get(
           preparedParams,
           'include',
