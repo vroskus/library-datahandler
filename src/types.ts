@@ -1,11 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any,no-use-before-define */
+/*
+eslint-disable
+@typescript-eslint/no-explicit-any,no-use-before-define,perfectionist/sort-modules
+*/
 
-interface $BaseConfig {
+type $BaseConfig = {
   logging?: boolean;
   timestamps?: boolean;
 }
+type $IncludeInside<
+MCC extends Record<MN, any>,
+MCS extends Record<MN, any>,
+MN extends keyof MCC,
+> = MN | {
+  as?: string;
+  model: MCS[MN];
+  where: $Where<MCC, MN>;
+};
 
-interface $MysqlConfig extends $BaseConfig {
+type $MysqlConfig = $BaseConfig & {
   database: string;
   dialect: 'mysql';
   host: string;
@@ -14,29 +26,13 @@ interface $MysqlConfig extends $BaseConfig {
   username: string;
 }
 
-interface $SqliteConfig extends $BaseConfig {
+type $SqliteConfig = $BaseConfig & {
   dialect: 'sqlite';
   storage: string;
 }
 
 export type $Config = $MysqlConfig | $SqliteConfig;
 
-export type $Where<
-MCC extends Record<MN, any>,
-MN extends keyof MCC,
-> = {
-  [key: string]: boolean | number | Record<string, unknown> | string | void;
-} & MCC[MN]['ModelQueryParams'];
-
-type $IncludeInside<
-MCC extends Record<MN, any>,
-MCS extends Record<MN, any>,
-MN extends keyof MCC,
-> = {
-  as?: string;
-  model: MCS[MN];
-  where: $Where<MCC, MN>;
-} | MN;
 export type $Include<
 MCC extends Record<MN, any>,
 MCS extends Record<MN, any>,
@@ -54,12 +50,19 @@ MN extends keyof MCC,
   attributes?: Array<string>;
   // include?: $Include<$Keys<$ModelAssociations<M>>>,
   include?: $Include<MCC, MCS, any>;
-  limit?: number,
-  offset?: number,
+  limit?: number;
+  offset?: number;
   where?: $Where<MCC, MN>;
 };
 
 export type $RequestContext = {
-  method: string,
-  request: Record<string, any>,
+  method: string;
+  request: Record<string, any>;
+};
+
+export type $Where<
+MCC extends Record<MN, any>,
+MN extends keyof MCC,
+> = MCC[MN]['ModelQueryParams'] & {
+  [key: string]: boolean | number | Record<string, unknown> | string | void;
 };

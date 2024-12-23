@@ -23,10 +23,11 @@ import type {
 } from './types';
 
 type $RequestContextListener = (arg0: $RequestContext) => unknown;
-type $SetRequestContextListenerParams = { listener: $RequestContextListener };
-type $SetRequestContextListenerResponse = void;
 
 export * from './types';
+
+const zeroValue: number = 0;
+const oneValue: number = 1;
 
 class DatabaseService<C extends $Config, MC extends {
   Classes: any;
@@ -149,7 +150,9 @@ class DatabaseService<C extends $Config, MC extends {
 
   setRequestContextListener({
     listener,
-  }: $SetRequestContextListenerParams): $SetRequestContextListenerResponse {
+  }: {
+    listener: $RequestContextListener;
+  }): void {
     this.requestContextListener = listener;
   }
 
@@ -210,8 +213,8 @@ class DatabaseService<C extends $Config, MC extends {
     return modelInstance;
   }
 
-  // mapQueryAssociations method
-  mapQueryAssociations<MN extends keyof MC['Config']>({
+  // mapQueryAssociations private method
+  #mapQueryAssociations<MN extends keyof MC['Config']>({
     include: includeInput,
     where: whereInput,
   }: {
@@ -230,11 +233,12 @@ class DatabaseService<C extends $Config, MC extends {
       where,
       (value: string, key: string) => {
         if (key.includes('.')) {
+          const dotIndex = key.indexOf('.');
           const associationName = key.substr(
-            0,
-            key.indexOf('.'),
+            zeroValue,
+            dotIndex,
           );
-          const param = key.substr(key.indexOf('.') + 1);
+          const param = key.substr(dotIndex + oneValue);
 
           const model = this.models[pluralize.singular(associationName)];
 
@@ -242,7 +246,7 @@ class DatabaseService<C extends $Config, MC extends {
             include.push({
               as: associationName,
               model,
-              ...this.mapQueryAssociations({
+              ...this.#mapQueryAssociations({
                 include: [],
                 where: {
                   [param]: value,
@@ -285,7 +289,7 @@ class DatabaseService<C extends $Config, MC extends {
       const {
         include,
         where,
-      } = this.mapQueryAssociations({
+      } = this.#mapQueryAssociations({
         include: _.get(
           preparedParams,
           'include',
@@ -379,8 +383,8 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    // If more then one record found
-    if (modelInstances.length > 1) {
+    // If more than one record found
+    if (modelInstances.length > oneValue) {
       throw new CustomError(
         'Multiple records found',
         BaseErrorKey.multipleRecordsFoundError,
@@ -394,7 +398,7 @@ class DatabaseService<C extends $Config, MC extends {
       );
     }
 
-    if (modelInstances.length === 1) {
+    if (modelInstances.length === oneValue) {
       return modelInstances[0];
     }
 
@@ -423,7 +427,7 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    if (modelInstances.length > 0) {
+    if (modelInstances.length > zeroValue) {
       return modelInstances[0];
     }
 
@@ -452,8 +456,9 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    if (modelInstances.length > 0) {
-      return modelInstances[modelInstances.length - 1];
+    // Return last item
+    if (modelInstances.length > zeroValue) {
+      return modelInstances[modelInstances.length - oneValue];
     }
 
     return null;
@@ -592,7 +597,7 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    if (modelInstances.length > 1) {
+    if (modelInstances.length > oneValue) {
       throw new CustomError(
         'Multiple records found',
         BaseErrorKey.multipleRecordsFoundError,
@@ -606,7 +611,7 @@ class DatabaseService<C extends $Config, MC extends {
       );
     }
 
-    if (modelInstances.length === 0) {
+    if (modelInstances.length === zeroValue) {
       return model.create(attributes);
     }
 
@@ -715,7 +720,7 @@ class DatabaseService<C extends $Config, MC extends {
     const modelInstances = await model.findAll(queryParams);
 
     // If more then one record found
-    if (modelInstances.length > 1) {
+    if (modelInstances.length > oneValue) {
       throw new CustomError(
         'Multiple records found',
         BaseErrorKey.multipleRecordsFoundError,
@@ -729,7 +734,7 @@ class DatabaseService<C extends $Config, MC extends {
       );
     }
 
-    if (modelInstances.length === 0) {
+    if (modelInstances.length === zeroValue) {
       throw new CustomError(
         'Record was not found',
         BaseErrorKey.entityNotFoundError,
@@ -769,7 +774,7 @@ class DatabaseService<C extends $Config, MC extends {
     });
     const modelInstances = await model.findAll(queryParams);
 
-    for (let index = 0; index < modelInstances.length; index += 1) {
+    for (let index = zeroValue; index < modelInstances.length; index += oneValue) {
       if (modelInstances[index].destroy) {
         await modelInstances[index].destroy();
       }
@@ -953,9 +958,9 @@ class DatabaseService<C extends $Config, MC extends {
       pivot,
     });
 
-    if (!result || (result && result.length !== 1)) {
+    if (!result || (result && result.length !== oneValue)) {
       throw new CustomError(
-        'Already associatied records',
+        'Already associated records',
         BaseErrorKey.alreadyAssociatedRecordsError,
         {
           data: {
@@ -1003,9 +1008,9 @@ class DatabaseService<C extends $Config, MC extends {
       modelName,
     });
 
-    if (!result || (result && result !== 1)) {
+    if (!result || (result && result !== oneValue)) {
       throw new CustomError(
-        'Not associatied records',
+        'Not associated records',
         BaseErrorKey.notAssociatedRecordsError,
         {
           data: {
