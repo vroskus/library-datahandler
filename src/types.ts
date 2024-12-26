@@ -1,6 +1,6 @@
 /*
 eslint-disable
-@typescript-eslint/no-explicit-any,no-use-before-define,perfectionist/sort-modules
+@typescript-eslint/no-explicit-any,no-use-before-define
 */
 
 type $BaseConfig = {
