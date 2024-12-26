@@ -5,17 +5,11 @@ eslint-disable
 
 type $BaseConfig = {
   logging?: boolean;
+  query?: {
+    raw?: boolean;
+  };
   timestamps?: boolean;
 }
-type $IncludeInside<
-MCC extends Record<MN, any>,
-MCS extends Record<MN, any>,
-MN extends keyof MCC,
-> = MN | {
-  as?: string;
-  model: MCS[MN];
-  where: $Where<MCC, MN>;
-};
 
 type $MysqlConfig = $BaseConfig & {
   database: string;
@@ -32,6 +26,16 @@ type $SqliteConfig = $BaseConfig & {
 }
 
 export type $Config = $MysqlConfig | $SqliteConfig;
+
+type $IncludeInside<
+MCC extends Record<MN, any>,
+MCS extends Record<MN, any>,
+MN extends keyof MCC,
+> = MN | {
+  as?: string;
+  model: MCS[MN];
+  where: $Where<MCC, MN>;
+};
 
 export type $Include<
 MCC extends Record<MN, any>,

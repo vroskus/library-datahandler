@@ -87,10 +87,6 @@ class DatabaseService<C extends $Config, MC extends {
 
   /* eslint-disable-next-line class-methods-use-this */
   getDbConfig(config: $Config): Options {
-    const query = {
-      raw: true,
-    };
-
     if (config.dialect === 'mysql') {
       const {
         database,
@@ -99,6 +95,7 @@ class DatabaseService<C extends $Config, MC extends {
         logging,
         password,
         port,
+        query,
         timestamps,
         username,
       } = config;
@@ -126,6 +123,7 @@ class DatabaseService<C extends $Config, MC extends {
       const {
         dialect,
         logging,
+        query,
         storage,
         timestamps,
       } = config;
