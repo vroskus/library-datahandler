@@ -1,7 +1,12 @@
 /*
 eslint-disable
-@typescript-eslint/no-explicit-any,no-use-before-define
+@typescript-eslint/no-explicit-any
 */
+
+// Enums
+import {
+  Method,
+} from './enums';
 
 type $BaseConfig = {
   logging?: boolean;
@@ -60,7 +65,7 @@ MN extends keyof MCC,
 };
 
 export type $RequestContext = {
-  method: string;
+  method: Method;
   request: Record<string, any>;
 };
 
