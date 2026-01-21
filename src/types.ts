@@ -1,6 +1,6 @@
 /*
 eslint-disable
-@typescript-eslint/no-explicit-any,no-use-before-define
+@typescript-eslint/no-explicit-any
 */
 
 // Enums
