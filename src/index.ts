@@ -13,6 +13,11 @@ import {
   CustomError,
 } from '@vroskus/library-error';
 
+// Enums
+import {
+  Method,
+} from './enums';
+
 // Types
 import type {
   $Config,
@@ -24,6 +29,7 @@ import type {
 
 type $RequestContextListener = (arg0: $RequestContext) => unknown;
 
+export * from './enums';
 export * from './types';
 
 const zeroValue: number = 0;
@@ -365,7 +371,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
-      method: 'getOne',
+      method: Method.getOne,
       request,
     });
 
@@ -409,7 +415,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
-      method: 'getFirst',
+      method: Method.getFirst,
       request,
     });
 
@@ -438,7 +444,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<(MC['Models'][MN]) | null> {
     this.requestContextListener({
-      method: 'getLast',
+      method: Method.getLast,
       request,
     });
 
@@ -468,7 +474,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<Array<MC['Models'][MN]>> {
     this.requestContextListener({
-      method: 'getMany',
+      method: Method.getMany,
       request,
     });
 
@@ -493,7 +499,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: MC['Config'][MN]['ModelCreateParams'];
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'createOne',
+      method: Method.createOne,
       request,
     });
 
@@ -517,7 +523,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: MC['Config'][MN]['ModelCreateParams'];
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'createBundle',
+      method: Method.createBundle,
       request,
     });
 
@@ -546,7 +552,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: Array<MC['Config'][MN]['ModelCreateParams']>;
   }): Promise<Array<MC['Models'][MN]>> {
     this.requestContextListener({
-      method: 'createMany',
+      method: Method.createMany,
       request,
     });
 
@@ -570,7 +576,7 @@ class DatabaseService<C extends $Config, MC extends {
     where: $Where<MC['Config'], MN>;
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'upsertOne',
+      method: Method.upsertOne,
       request,
     });
 
@@ -626,7 +632,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: MC['Config'][MN]['ModelUpdateParams'] | MC['Models'][MN];
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'updateOne',
+      method: Method.updateOne,
       request,
     });
 
@@ -662,7 +668,7 @@ class DatabaseService<C extends $Config, MC extends {
     where: $Where<MC['Config'], MN>;
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'toggleOne',
+      method: Method.toggleOne,
       request,
     });
 
@@ -701,7 +707,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'deleteOne',
+      method: Method.deleteOne,
       request,
     });
 
@@ -756,7 +762,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<Array<MC['Models'][MN]>> {
     this.requestContextListener({
-      method: 'deleteMany',
+      method: Method.deleteMany,
       request,
     });
 
@@ -787,7 +793,7 @@ class DatabaseService<C extends $Config, MC extends {
     params: $QueryParams<MC['Config'], MC['Classes'], MN>;
   }): Promise<number> {
     this.requestContextListener({
-      method: 'count',
+      method: Method.count,
       request,
     });
 
@@ -821,7 +827,7 @@ class DatabaseService<C extends $Config, MC extends {
       updatedItemIds: Array<string>;
     }> {
     this.requestContextListener({
-      method: 'sync',
+      method: Method.sync,
       request,
     });
 
@@ -933,7 +939,7 @@ class DatabaseService<C extends $Config, MC extends {
     };
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
-      method: 'addAssociation',
+      method: Method.addAssociation,
       request,
     });
 
@@ -985,7 +991,7 @@ class DatabaseService<C extends $Config, MC extends {
     };
   }): Promise<boolean> {
     this.requestContextListener({
-      method: 'removeAssociation',
+      method: Method.removeAssociation,
       request,
     });
 
@@ -1037,7 +1043,7 @@ class DatabaseService<C extends $Config, MC extends {
       removedAssociationModelIds: Array<string>;
     }> {
     this.requestContextListener({
-      method: 'syncAssociations',
+      method: Method.syncAssociations,
       request,
     });
 
