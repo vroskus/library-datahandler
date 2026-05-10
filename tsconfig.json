@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "rootDir": "src",
+    "outDir": "dist",
     "module": "commonjs",
     "esModuleInterop": true,
     "declaration": true,
@@ -10,16 +11,20 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es6",
-    "sourceMap": true,
+    "sourceMap": false,
+    "strict": true,
     "lib": [
-      "es6"
+      "ES2020"
+    ],
+    "types": [
+      "node",
+      "jest"
     ]
   },
   "exclude": [
-    "node_modules",
-    "./dist/**/*"
+    "node_modules"
   ],
-   "include": [
-    "./src"
+  "include": [
+    "src"
   ]
 }

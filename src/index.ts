@@ -58,7 +58,8 @@ class DatabaseService<C extends $Config, MC extends {
 
     this.Op = Op;
 
-    this.requestContextListener = () => {};
+    this.requestContextListener = () => {
+    };
   }
 
   #init(modelShapes: MC['Shapes']): void {
@@ -251,7 +252,8 @@ class DatabaseService<C extends $Config, MC extends {
               as: associationName,
               model,
               ...this.#mapQueryAssociations({
-                include: [],
+                include: [
+                ],
                 where: {
                   [param]: value,
                 },
@@ -263,7 +265,9 @@ class DatabaseService<C extends $Config, MC extends {
 
           where = _.omit(
             where,
-            [key],
+            [
+              key,
+            ],
           );
         }
       },
@@ -297,7 +301,8 @@ class DatabaseService<C extends $Config, MC extends {
         include: _.get(
           preparedParams,
           'include',
-          [],
+          [
+          ],
         ),
         where: params.where,
       });
@@ -587,7 +592,11 @@ class DatabaseService<C extends $Config, MC extends {
     } = request;
     const attributes = _.omit(
       params,
-      ['id', 'createdAt', 'updatedAt'],
+      [
+        'id',
+        'createdAt',
+        'updatedAt',
+      ],
     );
 
     const model = this.#getModel({
@@ -652,7 +661,11 @@ class DatabaseService<C extends $Config, MC extends {
 
     const attributes: MC['Config'][MN]['ModelUpdateParams'] = _.omit(
       params,
-      ['id', 'createdAt', 'updatedAt'],
+      [
+        'id',
+        'createdAt',
+        'updatedAt',
+      ],
     );
 
     if (typeof modelInstance.update === 'function') {
@@ -678,7 +691,11 @@ class DatabaseService<C extends $Config, MC extends {
     } = request;
     const attributes = _.omit(
       where,
-      ['id', 'createdAt', 'updatedAt'],
+      [
+        'id',
+        'createdAt',
+        'updatedAt',
+      ],
     );
 
     const model = this.#getModel({
@@ -839,7 +856,8 @@ class DatabaseService<C extends $Config, MC extends {
         items,
       },
     } = request;
-    const actions: Array<Promise<MC['Models'][MN]>> = [];
+    const actions: Array<Promise<MC['Models'][MN]>> = [
+    ];
     const where = {
       [`${String(associationModelName)}Id`]: associationModelId,
     };
@@ -874,8 +892,10 @@ class DatabaseService<C extends $Config, MC extends {
       ...updatedItemIds,
     );
 
-    const createdItemIds: Array<string> = [];
-    const syncedItems: Array<MC['Models'][MN]> = [];
+    const createdItemIds: Array<string> = [
+    ];
+    const syncedItems: Array<MC['Models'][MN]> = [
+    ];
 
     items.forEach((item) => {
       const updateRequest = {
@@ -1055,7 +1075,8 @@ class DatabaseService<C extends $Config, MC extends {
         id,
       },
     } = request;
-    const actions: Array<Promise<MC['Models'][MN]>> = [];
+    const actions: Array<Promise<MC['Models'][MN]>> = [
+    ];
     const pluralAssociationModelName = pluralize.plural(associationModelName);
 
     const model = this.#getModel({
@@ -1063,7 +1084,9 @@ class DatabaseService<C extends $Config, MC extends {
     });
 
     const modelInstance = await model.findOne({
-      include: [pluralAssociationModelName],
+      include: [
+        pluralAssociationModelName,
+      ],
       where: {
         id,
       },
@@ -1073,7 +1096,8 @@ class DatabaseService<C extends $Config, MC extends {
       _.get(
         modelInstance,
         pluralAssociationModelName,
-        [],
+        [
+        ],
       ),
       'id',
     );
