@@ -638,7 +638,7 @@ class DatabaseService<C extends $Config, MC extends {
   // updateOne method
   async updateOne<MN extends keyof MC['Config']>(request: {
     modelName: MN;
-    params: MC['Config'][MN]['ModelUpdateParams'] | MC['Models'][MN];
+    params: (MC['Config'][MN]['ModelUpdateParams'] | MC['Models'][MN]) & { id: string };
   }): Promise<MC['Models'][MN]> {
     this.requestContextListener({
       method: Method.updateOne,
@@ -650,7 +650,7 @@ class DatabaseService<C extends $Config, MC extends {
       params,
     } = request;
     const {
-      // @ts-ignore
+      // @ts-expect-error enforce to provide id
       id,
     } = params;
 
@@ -659,16 +659,16 @@ class DatabaseService<C extends $Config, MC extends {
       modelName,
     });
 
-    const attributes: MC['Config'][MN]['ModelUpdateParams'] = _.omit(
-      params,
-      [
-        'id',
-        'createdAt',
-        'updatedAt',
-      ],
-    );
-
     if (typeof modelInstance.update === 'function') {
+      const attributes: MC['Config'][MN]['ModelUpdateParams'] = _.omit(
+        params,
+        [
+          'id',
+          'createdAt',
+          'updatedAt',
+        ],
+      );
+
       await modelInstance.update(attributes);
     }
 
@@ -689,15 +689,6 @@ class DatabaseService<C extends $Config, MC extends {
       modelName,
       where,
     } = request;
-    const attributes = _.omit(
-      where,
-      [
-        'id',
-        'createdAt',
-        'updatedAt',
-      ],
-    );
-
     const model = this.#getModel({
       modelName,
     });
@@ -712,6 +703,15 @@ class DatabaseService<C extends $Config, MC extends {
     if (modelInstance !== null) {
       await modelInstance.destroy();
     } else {
+      const attributes = _.omit(
+        where,
+        [
+          'id',
+          'createdAt',
+          'updatedAt',
+        ],
+      );
+
       modelInstance = await model.create(attributes);
     }
 

@@ -73,5 +73,5 @@ export type $Where<
 MCC extends Record<MN, any>,
 MN extends keyof MCC,
 > = MCC[MN]['ModelQueryParams'] & {
-  [key: string]: boolean | number | Record<string, unknown> | string | void;
+  [key: string]: boolean | null | number | Record<string, unknown> | string;
 };
